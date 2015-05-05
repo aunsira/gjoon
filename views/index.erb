@@ -1,6 +1,6 @@
 <html>
   <body>
-    <h1>Simple ExampleGGGG</h1>
+    <h1>Simple Example</h1>
     <ul>
       <li><a href='/'>Home</a></li>
       <li><a href='/profile'>View Profile</a><% if !env['warden'].authenticated? %>(implicit sign in)<% end %></li>
@@ -14,7 +14,8 @@
 
     <% if authenticated? %>
       <h2>
-        <img src='<%= env['warden'].user.avatar_url %>' />
+        <!-- <img src='<%= env['warden'].user.avatar_url %>' /> -->
+        <img src='<%= github_user.avatar_url %>' />
         Welcome <%= github_user.name %>
     </h2>
     <% else %>

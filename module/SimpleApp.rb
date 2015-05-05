@@ -2,6 +2,8 @@ require 'rubygems'
 require 'bundler/setup'
 require 'rack/ssl'
 require 'sinatra/auth/github'
+require 'rest_client'
+require 'json'
 
 module Example
   class BadAuthentication < Sinatra::Base
@@ -41,6 +43,23 @@ module Example
 
     get '/login' do
       authenticate!
+      # puts ">>>>>>>>>>>> #{github_user.api.repositories}"
+      user_token = github_user.token
+      puts "???????? #{user_token}"
+      result = JSON.parse(RestClient.get('https://api.github.com/user',
+                                         {:params => {:access_token => user_token},
+                                          :accept => :json}))
+      puts "%%%%%%%% #{result}"
+
+      owner = 'spring-projects'
+      repo = 'spring-framework'
+      # puts "########### #{result}"
+      (1..4).each do |i|
+        result = JSON.parse(RestClient.get("https://api.github.com/repos/#{owner}/#{repo}/pulls", {:params => {:state => "open", :page => i}}))
+        result.each do |repo|
+          puts repo['title']
+        end
+      end
       redirect '/'
     end
 
