@@ -1,0 +1,27 @@
+<html>
+  <body>
+    <h1>Simple ExampleGGGG</h1>
+    <ul>
+      <li><a href='/'>Home</a></li>
+      <li><a href='/profile'>View Profile</a><% if !env['warden'].authenticated? %>(implicit sign in)<% end %></li>
+      <% if authenticated? %>
+        <li><a href='/logout'>Sign out</a></li>
+      <% else %>
+        <li><a href='/login'>Sign in</a> (explicit sign in)</li>
+      <% end %>
+    </ul>
+    <hr />
+
+    <% if authenticated? %>
+      <h2>
+        <img src='<%= env['warden'].user.avatar_url %>' />
+        Welcome <%= github_user.name %>
+    </h2>
+    <% else %>
+      <h2>Welcome stranger</h2>
+    <% end %>
+
+  </body>
+</html>
+
+
