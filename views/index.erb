@@ -12,15 +12,29 @@
     </ul>
     <hr />
 
-    <% if authenticated? %>
+    <% if authenticated? && !@toggle%>
       <h2>
         <!-- <img src='<%= env['warden'].user.avatar_url %>' /> -->
         <img src='<%= github_user.avatar_url %>' />
         Welcome <%= github_user.name %>
     </h2>
-    <% else %>
+    <% elsif !authenticated? %>
       <h2>Welcome stranger</h2>
     <% end %>
+
+    <% if @toggle && authenticated? %>
+      <h2>Profile</h2>
+      <dl>
+        <dt>Rails Org Member:</dt>
+        <dd><%= github_organization_access?('rails') %></dd>
+        <dt>Publicized Rails Org Members:</dt>
+        <dd><%= github_public_organization_access?('rails') %></dd>
+        <dt>Rails committer Team members:</dt>
+        <dd><%= github_team_access?(632) %></dd>
+      </dl>
+    <% else %>
+      <p></p>
+    <% end%>
 
   </body>
 </html>

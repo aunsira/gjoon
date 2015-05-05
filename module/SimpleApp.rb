@@ -19,6 +19,7 @@ module Example
   class SimpleApp < Sinatra::Base
     #set views
     set :views, File.expand_path('../../views', __FILE__)
+    @toggle = false
 
     enable :sessions
     enable :raise_errors
@@ -38,7 +39,9 @@ module Example
 
     get '/profile' do
       authenticate!
-      erb :profile
+      # flag for show access rights
+      @toggle = true
+      erb :index
     end
 
     get '/login' do
