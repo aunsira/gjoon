@@ -31,6 +31,10 @@
         <dd><%= github_public_organization_access?('rails') %></dd>
         <dt>Rails committer Team members:</dt>
         <dd><%= github_team_access?(632) %></dd>
+        <dt>List of Issues in repo</dt>
+        <% @result.each do |repo| %>
+          <dd><%= repo['title'] %></dd>
+        <% end %>
       </dl>
     <% else %>
       <p></p>
