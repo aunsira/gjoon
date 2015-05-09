@@ -27,7 +27,7 @@ module Example
     #enable :inline_templates
 
     set :github_options, {
-      :scope => 'user',
+      :scope => 'user,repo',
       :secret => ENV['GITHUB_CLIENT_SECRET'] || 'test_client_secret',
       :client_id => ENV['GITHUB_CLIENT_ID'] || 'test_client_id'
     }
@@ -43,10 +43,8 @@ module Example
       @toggle = true
       owner = 'spring-projects'
       repo = 'spring-framework'
-      @result = []
-      (1..4).each do |i|
-        @result += JSON.parse(RestClient.get("https://api.github.com/repos/#{owner}/#{repo}/pulls", {:params => {:state => "open", :page => i}}))
-      end
+      @result = JSON.parse(RestClient.get("https://api.github.com/repos/amedia/hanuman/pulls",
+                                           :Authorization => "token #{github_user.token}"))
       erb :index
     end
 
