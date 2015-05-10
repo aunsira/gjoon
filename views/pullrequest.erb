@@ -1,13 +1,13 @@
 <h2>Pull request</h2>
-<form action='pullrequest' method='POST'>
+<form action='pullrequest' method='POST' class="form-inline well">
   Please select repo:
   <select name="repo">
     <% list_repos.each do |repo| %>
       <option value="<%= repo %>"><%= repo%></option>
     <% end %>
   </select>
-  <input type="submit">
-</form><br />
+  <input type="submit" class="btn primary">
+</form>
 
 <% if !repos.nil?%>
 <dl>
