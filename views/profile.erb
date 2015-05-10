@@ -1,9 +1,19 @@
-<% if !repos.nil?%>
 <h2>Profile</h2>
+<form action='profile' method='POST'>
+  Please select repo:
+  <select name="repo">
+    <% list_repos.each do |repo| %>
+      <option value="<%= repo %>"><%= repo%></option>
+    <% end %>
+  </select>
+  <input type="submit">
+</form>
+
+<% if !repos.nil?%>
 <dl>
-  <dt>List of Issues in repository</dt>
+  <dt>List of pull request in repository : <%= repo_name %></dt>
   <% repos.each do |repo| %>
-    <dd><%= repo['title'] %></dd>
+    <dd><a href="<%=repo['html_url']%>"><%= repo['title'] %></a></dd>
   <% end %>
 </dl>
 <% end %>

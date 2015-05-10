@@ -19,6 +19,10 @@ module Example
       session[:access_token]
     end
 
+    def list_repos
+      repos = ['hanuman', 'minerva']
+    end
+
     get '/' do
       if authenticated?
         user_info = JSON.parse(RestClient.get("https://api.github.com/user",
@@ -39,15 +43,22 @@ module Example
       redirect '/';
     end
 
-    get '/profile' do
+    post '/profile' do
       if authenticated?
-        repos = JSON.parse(RestClient.get("https://api.github.com/repos/amedia/hanuman/pulls",
+        repo_name = params[:repo]
+        repos = JSON.parse(RestClient.get("https://api.github.com/repos/amedia/#{repo_name}/pulls",
                                              :Authorization => "token #{session[:access_token]}"))
-        erb :profile, :locals => {:repos => repos, :client_id => CLIENT_ID}
-      else
-        redirect "https://github.com/login/oauth/authorize?scope=user:email,repo&client_id=#{CLIENT_ID}"
+        erb :profile, :locals => {:repos => repos, :client_id => CLIENT_ID, :repo_name => repo_name}
       end
     end
+
+    get '/profile' do
+      if !authenticated?
+        redirect "https://github.com/login/oauth/authorize?scope=user:email,repo&client_id=#{CLIENT_ID}"
+      end
+      erb :profile, :locals => {:client_id => CLIENT_ID, :repos => nil}
+    end
+
     
     get '/logout' do
       session.clear
