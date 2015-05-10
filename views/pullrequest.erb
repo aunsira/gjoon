@@ -9,11 +9,11 @@
   <input type="submit" class="btn primary">
 </form>
 
-<% if !repos.nil?%>
+<% if !pullrequest_list.nil?%>
 <dl>
   <dt>List of pull request in repository : <%= repo_name %></dt>
-  <% repos.each do |repo| %>
-    <dd><a href="<%=repo['html_url']%>"><%= repo['title'] %></a></dd>
+  <% pullrequest_list.each do |pullrequest| %>
+    <dd><a href="<%=pullrequest['html_url']%>"><%= pullrequest['title'] %></a></dd>
   <% end %>
 </dl>
 <% end %>
