@@ -1,0 +1,9 @@
+<% if !repos.nil?%>
+<h2>Profile</h2>
+<dl>
+  <dt>List of Issues in repository</dt>
+  <% repos.each do |repo| %>
+    <dd><%= repo['title'] %></dd>
+  <% end %>
+</dl>
+<% end %>

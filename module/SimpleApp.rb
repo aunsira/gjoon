@@ -6,61 +6,49 @@ require 'rest_client'
 require 'json'
 
 module Example
-  class BadAuthentication < Sinatra::Base
-    get '/unauthenticated' do
-      status 403
-      <<-EOS
-      <h2>Unable to authenticate, sorry</h2>
-      <p>#{env['warden'].message}</p>
-      EOS
-    end
-  end
-
   class SimpleApp < Sinatra::Base
-    #set views
+
+    CLIENT_ID = "3840d90d97d7f5b9fc15"
+    CLIENT_SECRET = "5f0bf9755134e8f2a6f2091f7e101a514a649b4b"
+
+    use Rack::Session::Pool, :cookie_only => false
+
     set :views, File.expand_path('../../views', __FILE__)
-    @toggle = false
 
-    enable :sessions
-    enable :raise_errors
-    disable :show_exceptions
-    #enable :inline_templates
-
-    set :github_options, {
-      :scope => 'user,repo',
-      :secret => ENV['GITHUB_CLIENT_SECRET'] || 'test_client_secret',
-      :client_id => ENV['GITHUB_CLIENT_ID'] || 'test_client_id'
-    }
-    register Sinatra::Auth::Github
+    def authenticated?
+      session[:access_token]
+    end
 
     get '/' do
-      erb :index
+      if authenticated?
+        user_info = JSON.parse(RestClient.get("https://api.github.com/user",
+                                              {:params => {:access_token => session[:access_token]}}))
+      end
+      erb :index, :locals => {:client_id => CLIENT_ID, :user => user_info}
+    end
+
+    get '/callback' do
+      session_code = request.env['rack.request.query_hash']['code']
+
+      result = RestClient.post('https://github.com/login/oauth/access_token',
+                               {:client_id => CLIENT_ID,
+                                :client_secret => CLIENT_SECRET,
+                                :code => session_code},
+                                :accept => :json)
+      session[:access_token] = JSON.parse(result)['access_token']
+      redirect '/';
     end
 
     get '/profile' do
-      authenticate!
-      # flag for show access rights
-      @toggle = true
-      owner = 'spring-projects'
-      repo = 'spring-framework'
-      @result = JSON.parse(RestClient.get("https://api.github.com/repos/amedia/hanuman/pulls",
-                                           :Authorization => "token #{github_user.token}"))
-      erb :index
+      if authenticated?
+        repos = JSON.parse(RestClient.get("https://api.github.com/repos/amedia/hanuman/pulls",
+                                             :Authorization => "token #{session[:access_token]}"))
+        erb :profile, :locals => {:repos => repos, :client_id => CLIENT_ID}
+      else
+        redirect "https://github.com/login/oauth/authorize?scope=user:email,repo&client_id=#{CLIENT_ID}"
+      end
     end
 
-    get '/login' do
-      authenticate!
-      user_token = github_user.token
-      result = JSON.parse(RestClient.get('https://api.github.com/user',
-                                         {:params => {:access_token => user_token},
-                                          :accept => :json}))
-      redirect '/'
-    end
-
-    get '/logout' do
-      logout!
-      redirect '/'
-    end
   end
 
   def self.app
