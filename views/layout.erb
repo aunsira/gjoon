@@ -4,7 +4,11 @@
     <ul>
       <li><a href='/'>Home</a></li>
       <li><a href='/profile'>View Profile</a></li>
-      <li><a href="https://github.com/login/oauth/authorize?scope=user:email,repo&client_id=<%= client_id %>">Sign in</a></li>
+      <% if !authenticated? %>
+        <li><a href="https://github.com/login/oauth/authorize?scope=user:email,repo&client_id=<%= client_id %>">Sign in</a></li>
+      <% else %>
+        <li><a href="/logout">Sign out</a></li>
+      <% end %>
     </ul>
     <div>
       <%= yield %>

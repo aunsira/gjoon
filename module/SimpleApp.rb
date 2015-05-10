@@ -48,6 +48,11 @@ module Example
         redirect "https://github.com/login/oauth/authorize?scope=user:email,repo&client_id=#{CLIENT_ID}"
       end
     end
+    
+    get '/logout' do
+      session.clear
+      redirect '/'
+    end
 
   end
 
