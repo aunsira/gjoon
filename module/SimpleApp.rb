@@ -14,6 +14,7 @@ module Example
     use Rack::Session::Pool, :cookie_only => false
 
     set :views, File.expand_path('../../views', __FILE__)
+    set :public_folder, 'public'
 
     def authenticated?
       session[:access_token]
@@ -27,6 +28,7 @@ module Example
       if authenticated?
         user_info = JSON.parse(RestClient.get("https://api.github.com/user",
                                               {:params => {:access_token => session[:access_token]}}))
+        session['user'] = user_info
       end
       erb :index, :locals => {:client_id => CLIENT_ID, :user => user_info}
     end
