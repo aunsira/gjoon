@@ -18,10 +18,11 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li><a href='/profile'>View Profile</a></li>
+            <li><a href='/pullrequest'>View Pull request</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <% if !authenticated? %>
+
               <img style="height:50px; margin-top: -2px;" src='https://dl.dropboxusercontent.com/s/xufut5v34svtlyg/goon.jpg?dl=0'/>
             <% else%>
               <img style="height:50px; margin-top: -2px;" src='<%= session['user']['avatar_url'] %>'/>

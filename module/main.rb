@@ -6,7 +6,7 @@ require 'rest_client'
 require 'json'
 
 module Example
-  class SimpleApp < Sinatra::Base
+  class MainApp < Sinatra::Base
 
     CLIENT_ID = "3840d90d97d7f5b9fc15"
     CLIENT_SECRET = "5f0bf9755134e8f2a6f2091f7e101a514a649b4b"
@@ -45,23 +45,22 @@ module Example
       redirect '/';
     end
 
-    post '/profile' do
+    post '/pullrequest' do
       if authenticated?
         repo_name = params[:repo]
         repos = JSON.parse(RestClient.get("https://api.github.com/repos/amedia/#{repo_name}/pulls",
                                              :Authorization => "token #{session[:access_token]}"))
-        erb :profile, :locals => {:repos => repos, :client_id => CLIENT_ID, :repo_name => repo_name}
+        erb :pullrequest, :locals => {:repos => repos, :client_id => CLIENT_ID, :repo_name => repo_name}
       end
     end
 
-    get '/profile' do
+    get '/pullrequest' do
       if !authenticated?
         redirect "https://github.com/login/oauth/authorize?scope=user:email,repo&client_id=#{CLIENT_ID}"
       end
-      erb :profile, :locals => {:client_id => CLIENT_ID, :repos => nil}
+      erb :pullrequest, :locals => {:client_id => CLIENT_ID, :repos => nil}
     end
 
-    
     get '/logout' do
       session.clear
       redirect '/'
@@ -71,7 +70,7 @@ module Example
 
   def self.app
     @app ||= Rack::Builder.new do
-      run SimpleApp
+      run MainApp
     end
   end
 end
