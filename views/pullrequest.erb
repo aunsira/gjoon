@@ -29,3 +29,23 @@
   <% end %>
 </dl>
 <% end %>
+<% if !@page.nil? %>
+  <form id='prev' action='pullrequest' method='POST'>
+    <input type='hidden' name='page' value="<%= @page.to_i - 1%>"/>
+    <input type='hidden' name='repo' value="<%= @repo_name %>"/>
+    <input type='hidden' name='state' value="<%= @repo_state %>"/>
+  </form>
+  <form id='next' action='pullrequest' method='POST'>
+    <input type='hidden' name='page' value="<%= @page.to_i + 1%>"/>
+    <input type='hidden' name='repo' value="<%= @repo_name %>"/>
+    <input type='hidden' name='state' value="<%= @repo_state %>"/>
+  </form>
+  <div class="tab-content">
+    <div class="pull-left">
+      <ul class="pager">
+        <li ><a class="btnPrevious" onclick="document.getElementById('prev').submit();">prev page</a></li>
+        <li ><a class="btnNext" onclick="document.getElementById('next').submit();">next page</a></li>
+      </ul>
+    </div>
+  </div>
+<% end %>

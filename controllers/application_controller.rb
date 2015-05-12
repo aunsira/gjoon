@@ -47,10 +47,14 @@ module Controller
 
     post '/pullrequest' do
       if authenticated?
-        repo_name = params[:repo]
-        repo_state = params[:state]
-        pullrequest_list = getPullRequest(repo_name, repo_state)
-        erb :pullrequest, :locals => {:pullrequest_list => pullrequest_list, :client_id => CLIENT_ID, :repo_name => repo_name}
+        @repo_name = params[:repo]
+        @repo_state = params[:state]
+        @page = params[:page]
+        if params[:page].nil?
+          @page = 1
+        end
+        pullrequest_list = getPullRequest(@repo_name, @repo_state, @page)
+        erb :pullrequest, :locals => {:pullrequest_list => pullrequest_list, :client_id => CLIENT_ID, :repo_name => @repo_name}
       end
     end
 
