@@ -15,7 +15,6 @@ module GithubHelper
   end
 
   def getPullRequest(repo_name)
-      repos = JSON.parse(RestClient.get("https://api.github.com/repos/amedia/#{repo_name}/pulls",
-                                           :Authorization => "token #{session[:access_token]}"))
+      repos = JSON.parse(RestClient.get("https://api.github.com/repos/amedia/#{repo_name}/pulls",{:params => {:state => 'all'}, :Authorization => "token #{session[:access_token]}"}))
   end
 end

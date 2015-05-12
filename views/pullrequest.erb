@@ -13,7 +13,14 @@
 <dl>
   <dt>List of pull request in repository : <%= repo_name %></dt>
   <% pullrequest_list.each do |pullrequest| %>
-    <dd><a href="<%=pullrequest['html_url']%>"><%= pullrequest['title'] %></a></dd>
+    <dd>
+    <a href="<%=pullrequest['html_url']%>"><%= pullrequest['title'] %></a>
+    <% if pullrequest['state'] == 'open' %>
+      <font color='#90EE90'><%= pullrequest['state']%></font>  
+    <% else %>
+      <font color='#FF6347'><%= pullrequest['state']%></font>  
+    <% end%>
+    </dd>
   <% end %>
 </dl>
 <% end %>
