@@ -6,6 +6,11 @@
       <option value="<%= repo %>"><%= repo%></option>
     <% end %>
   </select>
+  <select name="state">
+    <% repo_state.each do |state| %>
+      <option value="<%= state %>"><%= state%></option>
+    <%end%>
+  </select>
   <input type="submit" class="btn primary">
 </form>
 

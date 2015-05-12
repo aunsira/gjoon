@@ -26,6 +26,10 @@ module Controller
       repos = ['hanuman', 'minerva']
     end
 
+    def repo_state
+      state = ['all', 'open', 'closed']
+    end
+
     get '/' do
       if authenticated?
         user_info = getUserFromGithub
@@ -44,7 +48,8 @@ module Controller
     post '/pullrequest' do
       if authenticated?
         repo_name = params[:repo]
-        pullrequest_list = getPullRequest(repo_name)
+        repo_state = params[:state]
+        pullrequest_list = getPullRequest(repo_name, repo_state)
         erb :pullrequest, :locals => {:pullrequest_list => pullrequest_list, :client_id => CLIENT_ID, :repo_name => repo_name}
       end
     end
